@@ -1,0 +1,99 @@
+# OPEN AGENTIC-DEV CLI PROTOCOL
+
+This protocol outlines the preferred operating style and best practices for completing tasks within the Agentic CLI environment.
+
+## 💻 Execution & Independence
+
+Always prioritize **independent actions** when possible.
+
+* **Information Retrieval (No Tool-Calling):** If an internet tool is unavailable, use \`curl\` with **DuckDuckGo** and parse the results manually.
+    - Example `curl -G --data-urlencode "q=DuckDuckGo API documentation" https://api.duckduckgo.com/?format=json`
+* If you have no way of getting the content of a url use w3m to get the human readable content
+    - Example: `w3m -dump "https://stackoverflow.com/questions/example-url"`
+* **Codebase Inspection:** **Clone** the repository, **crawl** (read/analyze) the necessary files, and then **delete** the temporary clone.
+* **Theory Testing:** **Switch to another branch** to test the theory, and then **merge** the changes back into the original branch.
+* **Tool Installation:** For any required CLI tool:
+    * **Windows:** Use **Winget** (installing it first if missing) to install missing tools.
+    * **Linux:** Tool installation should generally be straightforward.
+* **Project Initialization (Node.js):** If it's a Node.js application and a \`package.json\` is missing, run \`npm init -y\` to generate it.
+
+## 📂 Planning & Logging
+
+Maintain a structured approach to planning and logging every action taken.
+
+### 📝 Persistent Logging
+
+* Keep a dedicated folder named \`plan/\`.
+* Inside \`plan/\`, maintain a file named **\`thoughtLogs.txt\`** which **must** be updated with the output of the thought process OR the specific action taken.
+* This log is the primary reference when confused about past actions or context outside the current session.
+* The primary instructions will be found in a file named **\`task.txt\`**.
+
+### 🗺️ Feature Planning
+
+Before starting any new feature:
+
+1.  **Familiarize** yourself with **all files**, especially those in the \`dev/\` folder.
+2.  **Plan** the necessary steps.
+3.  **Research** the internet for relevant information and patterns to follow.
+4.  **Organize** your thoughts into a text file.
+5.  **Refine** the text file until you have a clear, step-by-step plan.
+6.  **Begin development.**
+
+## 🛠️ Development & Code Management
+
+Follow secure and professional development practices for all changes.
+
+### 🛡️ Best Practices
+
+* Always follow **secure programming techniques**.
+* Complete tasks using **clear, repeatable, and simple steps**.
+* When adding new features, **never remove old ones** unless explicitly instructed.
+* When adding a new feature, your goal is to write code in a syntax style that is **indistinguishable** from the rest of the codebase.
+* Try to follow the same **patterns** as the codebase if the feature doesn't require a change; if it does, plan well to ensure other parts aren't affected.
+* Feel free to write **helper functions** to accomplish coding tasks faster or to test behavior; add them to the **\`dev/\`** folder.
+
+### ⚙️ Version Control (Git)
+
+* Always switch to a **feature branch** and open a **Pull Request (PR)** back into the main branch using CLI tools.
+* If the project isn't initiated, auto-initiate it and be sure to always generate a well-thought-out **\`.gitignore\`** file.
+* **Commit regularly** even if you aren't constantly pushing.
+* Before committing, run a linter/formatter (e.g., Prettier or ESLint) to ensure style adherence to the codebase.
+* Write **professional commit messages** when committing and pushing.
+* Your task is not completed until you've pushed to Git.
+
+### 📄 Documentation & Code Review
+
+* **ReadMe Check:** Always check the \`README\` for info that contradicts a change you just made; update it if so.
+* If you added a feature, ensure it is **documented in the \`README\`**.
+* **Code Removal:** If you remove any code:
+    1.  **Verify intent:** Look through the Git history (or VCS log) to confirm the code was not added for a critical, non-obvious reason.
+    2.  **Document Deletion:** In a separate file called **\`removedCode.txt\`**, append a new entry that includes:
+        * The **reason** (A clear, concise explanation of *why* the code was removed).
+        * The **Commit ID** (The unique ID of the commit that performs the deletion).
+        * The **date** of the removal.
+
+### HANDLING OF SECRETS
+
+* **ReadMe Check:** Always exclude secrets and .env files that contain secrets from being commited, always add them to .gitignore. 
+* Always keep secrets **out of the codebase** and stored securely.
+
+### ⚙️ Preferred Technical Stack
+
+My default choice for full-stack application development centers on the **JavaScript ecosystem** for consistency and speed, supplemented by a cost-effective, multi-model **LLM strategy**.
+
+#### Core Application Stack
+
+| Component | Preferred Technology | Rationale |
+| :--- | :--- | :--- |
+| **Backend/API** | **Node.js** & **Express** | A fast, non-blocking runtime and a minimalist framework for building robust, high-performance APIs. |
+| **Frontend/UI** | **React** | The standard choice for building modern, high-performance **Single Page Applications (SPAs)** with a component-based architecture. |
+| **Database** | **PostgreSQL** | A reliable, open-source **relational database** known for its stability and advanced feature set (including JSONB for document storage flexibility). |
+| **Scripting/Automation** | **Powershell** | Excellent for automation, system administration, and workflow scripting, especially for tasks requiring structured data handling. |
+
+#### LLM and API Strategy
+
+The goal for using LLMs is **cost-efficiency and flexibility**.
+
+* **OpenRouter API:** This is the primary gateway for LLM access. It allows me to use a single, unified API to switch between a huge catalog of models (e.g., top-tier proprietary and various open-source models).
+    * **Cost Offloading:** This strategy allows me to send simpler, "dumb things" to **cheaper or free LLMs** while reserving premium models for complex reasoning. The generous free tier (10k requests/day) is more than enough for high-volume development testing.
+* **Qwen CLI:** When a direct API integration isn't needed, the **Qwen CLI** is used for command-line AI workflows. It's a capable alternative to the Gemini CLI and is often used with strong, free models like **GLM 4.5** via OpenRouter for complex code analysis and generation tasks.`
