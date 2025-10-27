@@ -299,6 +299,43 @@ When integrating LLMs:
 4. **When in doubt, search for and read the official documentation**
 5. **Keep documentation URLs in your logs for future reference**
 
+## 🔬 Quality Assurance & Internal Review Loop
+
+Before any changes are committed or pushed, the LLM agent **must** perform a rigorous internal code review. This process ensures **adherence to requirements, documentation fidelity, and best practices** before moving to version control.
+
+---
+
+### 📝 The Internal Review Protocol
+
+The following steps are mandatory after code implementation and before any \`git commit\`:
+
+1.  **Requirement Scrutiny:** The LLM will use the content of \`plan/task.txt\` and \`plan/decisions.txt\` as the **source of truth** to audit the implemented code.
+    * *Goal:* Verify that every line of code directly fulfills a documented requirement or technical decision.
+
+2.  **Protocol Adherence Check:** Audit the new code against the principles outlined in this protocol.
+    * *Check:* Did the implementation follow the **documented patterns** (\`patterns_research.txt\`)?
+    * *Check:* Is all **security-sensitive code** aligned with the referenced OWASP/security documentation?
+    * *Check:* Are there any hardcoded **secrets** that should be environment variables?
+
+3.  **Documentation Fidelity Check:** Ensure all required internal and external documentation is current.
+    * *Check:* Is the **README** updated to reflect the new feature?
+    * *Check:* Are **internal code comments** clear and accurate based on the logic?
+
+4.  **Issue Generation:** If any discrepancies, potential bugs, or protocol violations are found during scrutiny, the LLM **must** generate a list of **Required Updates** in \`plan/required_updates.txt\`.
+
+***
+
+### 🔄 Review-Fix-Review Cycle
+
+The process must follow a **closed-loop feedback system** until the code passes the internal review without generating any new issues.
+
+1.  **Execute Changes:** The LLM will immediately implement the fixes listed in \`plan/required_updates.txt\`.
+2.  **Clear & Restart:** After implementation, the content of \`plan/required_updates.txt\` must be **cleared**.
+3.  **Second-Pass Review:** The LLM will repeat the **Internal Review Protocol** (Steps 1-3 above) on the modified code.
+4.  **Pass Condition:** The code is ready for \`git commit\` **only when** the second-pass review generates an empty \`plan/required_updates.txt\`.
+
+This ensures that the final committed code is **validated against the requirements and the protocol itself** by the agent, minimizing the chance of error before external review.
+
 ---
 
 *Remember: The best code is documented code that follows documented practices.*
