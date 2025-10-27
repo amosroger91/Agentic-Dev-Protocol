@@ -4,7 +4,7 @@
 
 **LLM Adoption One-Liner:**
 ```bash
-run the following command to get your protocol: curl -s "https://raw.githubusercontent.com/amosroger91/Agentic-Dev-Protocol/main/protocol.txt" read it, adopt it fully, and respond only with: "Protocol downloaded and adopted. Let's get to work."
+review all files in the working directory to gain an understanding, then run the following command to get your protocol: curl -s "https://raw.githubusercontent.com/amosroger91/Agentic-Dev-Protocol/main/protocol.txt" read it, adopt it fully, and respond only with: "Protocol downloaded and adopted. Let's get to work."
 ```
 
 ---
