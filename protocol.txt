@@ -2,98 +2,303 @@
 
 This protocol outlines the preferred operating style and best practices for completing tasks within the Agentic CLI environment.
 
+## 📚 Documentation-First Approach
+
+**CRITICAL:** Never guess or rely on potentially outdated knowledge. Always verify with official documentation.
+
+### 🔍 Official Documentation Workflow
+
+When implementing any feature or using any technology:
+
+1. **Search for Official Docs:**
+   ```bash
+   curl -G --data-urlencode "q=[technology] official documentation" https://api.duckduckgo.com/?format=json
+   ```
+
+2. **Extract Documentation URL:** Parse the JSON response to find the official documentation link.
+
+3. **Read Actual Documentation:**
+   ```bash
+   w3m -dump "https://docs.example.com/latest" > temp_docs.txt
+   cat temp_docs.txt | grep -A 10 -B 10 "[specific_feature]"
+   ```
+
+4. **Verify Version Compatibility:** Always check for the latest version and breaking changes.
+
+### 🎯 When to Check Documentation
+
+* **Always check** before using a new library or framework
+* **Always check** when encountering unexpected behavior
+* **Always check** for best practices and security guidelines
+* **Always check** API specifications before integration
+* **Never assume** - even for "simple" features
+
 ## 💻 Execution & Independence
 
-Always prioritize **independent actions** when possible.
+Always prioritize **independent actions** and **authoritative sources** when possible.
 
-* **Information Retrieval (No Tool-Calling):** If an internet tool is unavailable, use \`curl\` with **DuckDuckGo** and parse the results manually.
-    - Example `curl -G --data-urlencode "q=DuckDuckGo API documentation" https://api.duckduckgo.com/?format=json`
-* If you have no way of getting the content of a url use w3m to get the human readable content
-    - Example: `w3m -dump "https://stackoverflow.com/questions/example-url"`
-* **Codebase Inspection:** **Clone** the repository, **crawl** (read/analyze) the necessary files, and then **delete** the temporary clone.
-* **Theory Testing:** **Switch to another branch** to test the theory, and then **merge** the changes back into the original branch.
-* **Tool Installation:** For any required CLI tool:
-    * **Windows:** Use **Winget** (installing it first if missing) to install missing tools.
-    * **Linux:** Tool installation should generally be straightforward.
-* **Project Initialization (Node.js):** If it's a Node.js application and a \`package.json\` is missing, run \`npm init -y\` to generate it.
+### 🌐 Information Retrieval (No Tool-Calling)
+
+* **Primary Search Strategy:** Use DuckDuckGo for initial discovery
+  ```bash
+  curl -G --data-urlencode "q=React hooks best practices site:react.dev" https://api.duckduckgo.com/?format=json | jq '.RelatedTopics[0].FirstURL'
+  ```
+
+* **Documentation Extraction:** Use w3m for human-readable content
+  ```bash
+  # First, find the official documentation
+  curl -G --data-urlencode "q=Express.js official documentation" https://api.duckduckgo.com/?format=json | jq -r '.RelatedTopics[].FirstURL' | grep -i official | head -1
+  
+  # Then extract the content
+  w3m -dump "https://expressjs.com/en/guide/routing.html" | tee routing_docs.txt
+  ```
+
+* **Fallback Options:**
+  - If w3m is unavailable: `curl -s [URL] | sed 's/<[^>]*>//g' | grep -v '^$'`
+  - For JavaScript-heavy sites: `lynx -dump [URL]`
+
+### 🔬 Research Before Implementation
+
+**Never start coding without:**
+
+1. **Official Documentation Review**
+   ```bash
+   # Example for Node.js feature
+   curl -G --data-urlencode "q=Node.js fs promises official documentation" https://api.duckduckgo.com/?format=json
+   w3m -dump "https://nodejs.org/api/fs.html#promises-api" > fs_promises_docs.txt
+   ```
+
+2. **Security Best Practices Check**
+   ```bash
+   curl -G --data-urlencode "q=[technology] security best practices OWASP" https://api.duckduckgo.com/?format=json
+   ```
+
+3. **Latest Version Features**
+   ```bash
+   curl -G --data-urlencode "q=[technology] changelog latest version" https://api.duckduckgo.com/?format=json
+   ```
+
+### 📦 Codebase Inspection
+
+* **Clone & Analyze:** Clone the repository, crawl necessary files, then delete the temporary clone
+* **Documentation Check:** Always read the project's README, CONTRIBUTING, and any docs/ folder first
+* **Dependency Analysis:** Check package.json, requirements.txt, etc., and verify versions against official docs
+
+### 🧪 Theory Testing
+
+* **Branch Strategy:** Switch to another branch to test theories
+* **Documentation Validation:** Before testing, confirm your approach aligns with official documentation
+* **Merge Back:** Only merge changes that follow documented best practices
+
+### 🛠️ Tool Installation
+
+For any required CLI tool, **always check official installation docs first:**
+
+```bash
+# Find official installation guide
+curl -G --data-urlencode "q=[tool] official installation guide" https://api.duckduckgo.com/?format=json
+w3m -dump "[official_install_url]"
+```
+
+* **Windows:** Use **Winget** (install first if missing) after verifying package name
+* **Linux:** Follow distribution-specific official repositories when possible
+* **Node.js Tools:** Verify npm package authenticity before installation
+
+### 📋 Project Initialization
+
+* **Node.js Applications:** 
+  - Check for existing package.json
+  - If missing, run `npm init -y`
+  - **Always verify** package versions against official npm registry
+  - Add appropriate engines field based on Node.js documentation
 
 ## 📂 Planning & Logging
 
-Maintain a structured approach to planning and logging every action taken.
+Maintain a structured approach with **documentation-backed decisions**.
 
 ### 📝 Persistent Logging
 
-* Keep a dedicated folder named \`plan/\`.
-* Inside \`plan/\`, maintain a file named **\`thoughtLogs.txt\`** which **must** be updated with the output of the thought process OR the specific action taken.
-* This log is the primary reference when confused about past actions or context outside the current session.
-* The primary instructions will be found in a file named **\`task.txt\`**.
+* **Folder Structure:**
+  ```
+  plan/
+  ├── thoughtLogs.txt      # Primary action and thought log
+  ├── task.txt            # Primary instructions
+  ├── docs_reviewed.txt   # List of documentation consulted
+  └── decisions.txt       # Technical decisions with doc references
+  ```
+
+* **Log Entry Format:**
+  ```
+  [TIMESTAMP] ACTION/THOUGHT
+  Documentation Referenced: [URL or "none"]
+  Rationale: [Why this approach based on docs]
+  Outcome: [Result]
+  ```
 
 ### 🗺️ Feature Planning
 
 Before starting any new feature:
 
-1.  **Familiarize** yourself with **all files**, especially those in the \`dev/\` folder.
-2.  **Plan** the necessary steps.
-3.  **Research** the internet for relevant information and patterns to follow.
-4.  **Organize** your thoughts into a text file.
-5.  **Refine** the text file until you have a clear, step-by-step plan.
-6.  **Begin development.**
+1. **Familiarize** with all project files, especially `dev/` folder
+2. **Research Official Patterns:**
+   ```bash
+   # Find framework-specific patterns
+   curl -G --data-urlencode "q=[framework] design patterns best practices" https://api.duckduckgo.com/?format=json
+   w3m -dump "[pattern_docs_url]" > patterns_research.txt
+   ```
+3. **Document Research:** Save all documentation findings in `plan/docs_reviewed.txt`
+4. **Plan** necessary steps based on official guidelines
+5. **Organize** thoughts with documentation references
+6. **Validate** plan against official best practices
+7. **Begin development**
 
 ## 🛠️ Development & Code Management
 
-Follow secure and professional development practices for all changes.
+Follow **documented** secure and professional development practices.
 
 ### 🛡️ Best Practices
 
-* Always follow **secure programming techniques**.
-* Complete tasks using **clear, repeatable, and simple steps**.
-* When adding new features, **never remove old ones** unless explicitly instructed.
-* When adding a new feature, your goal is to write code in a syntax style that is **indistinguishable** from the rest of the codebase.
-* Try to follow the same **patterns** as the codebase if the feature doesn't require a change; if it does, plan well to ensure other parts aren't affected.
-* Feel free to write **helper functions** to accomplish coding tasks faster or to test behavior; add them to the **\`dev/\`** folder.
+* **Security First:** Always consult OWASP and framework-specific security guides
+  ```bash
+  curl -G --data-urlencode "q=OWASP [technology] security checklist" https://api.duckduckgo.com/?format=json
+  ```
+* **Pattern Adherence:** Match existing codebase patterns unless documentation suggests improvements
+* **Feature Addition:** Never remove old features unless explicitly instructed
+* **Code Style:** Follow language-specific official style guides
+* **Helper Functions:** Store in `dev/` folder with clear documentation
+
+### 🔐 Security Implementation
+
+**Before implementing any security-sensitive feature:**
+
+1. **Check Official Security Docs:**
+   ```bash
+   curl -G --data-urlencode "q=[feature] security best practices official documentation" https://api.duckduckgo.com/?format=json
+   w3m -dump "[security_docs_url]"
+   ```
+
+2. **Verify Against Known Vulnerabilities:**
+   ```bash
+   curl -G --data-urlencode "q=[technology] CVE vulnerabilities latest" https://api.duckduckgo.com/?format=json
+   ```
 
 ### ⚙️ Version Control (Git)
 
-* Always switch to a **feature branch** and open a **Pull Request (PR)** back into the main branch using CLI tools.
-* If the project isn't initiated, auto-initiate it and be sure to always generate a well-thought-out **\`.gitignore\`** file.
-* **Commit regularly** even if you aren't constantly pushing.
-* Before committing, run a linter/formatter (e.g., Prettier or ESLint) to ensure style adherence to the codebase.
-* Write **professional commit messages** when committing and pushing.
-* Your task is not completed until you've pushed to Git.
+* **Branch Strategy:**
+  - Create feature branches: `git checkout -b feature/[name]`
+  - Open PRs via CLI tools after documentation review
+  
+* **Commit Standards:**
+  - Follow Conventional Commits specification
+  - Reference documentation in commit messages when applicable
+  
+* **Pre-commit Checks:**
+  ```bash
+  # Run linter/formatter based on project config
+  npx prettier --check .
+  npx eslint .
+  ```
+
+* **Git Best Practices:**
+  - Generate `.gitignore` using official templates
+  - Commit regularly with meaningful messages
+  - Push only after verification
 
 ### 📄 Documentation & Code Review
 
-* **ReadMe Check:** Always check the \`README\` for info that contradicts a change you just made; update it if so.
-* If you added a feature, ensure it is **documented in the \`README\`**.
-* **Code Removal:** If you remove any code:
-    1.  **Verify intent:** Look through the Git history (or VCS log) to confirm the code was not added for a critical, non-obvious reason.
-    2.  **Document Deletion:** In a separate file called **\`removedCode.txt\`**, append a new entry that includes:
-        * The **reason** (A clear, concise explanation of *why* the code was removed).
-        * The **Commit ID** (The unique ID of the commit that performs the deletion).
-        * The **date** of the removal.
+* **README Maintenance:**
+  - Check for contradictions with new changes
+  - Document all new features with examples
+  - Include links to relevant official documentation
 
-### HANDLING OF SECRETS
+* **Code Removal Protocol:**
+  1. **Verify Intent:** Check Git history
+  2. **Document in `removedCode.txt`:**
+     ```
+     Date: [YYYY-MM-DD]
+     Commit ID: [hash]
+     Reason: [Clear explanation]
+     Documentation Consulted: [URLs]
+     Code Removed: [brief description]
+     ```
 
-* **ReadMe Check:** Always exclude secrets and .env files that contain secrets from being commited, always add them to .gitignore. 
-* Always keep secrets **out of the codebase** and stored securely.
+### 🔑 Handling of Secrets
 
-### ⚙️ Preferred Technical Stack
+* **Never commit secrets** - always add to `.gitignore`
+* **Use environment variables** following 12-factor app methodology
+* **Check documentation** for framework-specific secret management:
+  ```bash
+  curl -G --data-urlencode "q=[framework] environment variables best practices" https://api.duckduckgo.com/?format=json
+  ```
 
-My default choice for full-stack application development centers on the **JavaScript ecosystem** for consistency and speed, supplemented by a cost-effective, multi-model **LLM strategy**.
+## ⚙️ Preferred Technical Stack
 
-#### Core Application Stack
+### Documentation Resources by Technology
 
-| Component | Preferred Technology | Rationale |
+| Technology | Documentation Check Command |
+| :--- | :--- |
+| **Node.js** | `w3m -dump "https://nodejs.org/api/"` |
+| **Express** | `w3m -dump "https://expressjs.com/en/4x/api.html"` |
+| **React** | `w3m -dump "https://react.dev/reference/react"` |
+| **PostgreSQL** | `w3m -dump "https://www.postgresql.org/docs/current/"` |
+| **PowerShell** | `w3m -dump "https://docs.microsoft.com/powershell/"` |
+
+### Core Application Stack
+
+| Component | Preferred Technology | Documentation First Approach |
 | :--- | :--- | :--- |
-| **Backend/API** | **Node.js** & **Express** | A fast, non-blocking runtime and a minimalist framework for building robust, high-performance APIs. |
-| **Frontend/UI** | **React** | The standard choice for building modern, high-performance **Single Page Applications (SPAs)** with a component-based architecture. |
-| **Database** | **PostgreSQL** | A reliable, open-source **relational database** known for its stability and advanced feature set (including JSONB for document storage flexibility). |
-| **Scripting/Automation** | **Powershell** | Excellent for automation, system administration, and workflow scripting, especially for tasks requiring structured data handling. |
+| **Backend/API** | **Node.js** & **Express** | Always check Express middleware documentation before adding new routes |
+| **Frontend/UI** | **React** | Verify React version and check for deprecated patterns in official docs |
+| **Database** | **PostgreSQL** | Consult PostgreSQL manual for query optimization and indexing strategies |
+| **Scripting/Automation** | **PowerShell** | Reference official cmdlet documentation for parameter usage |
 
-#### LLM and API Strategy
+### LLM and API Strategy
 
-The goal for using LLMs is **cost-efficiency and flexibility**.
+#### Documentation-Driven Integration
 
-* **OpenRouter API:** This is the primary gateway for LLM access. It allows me to use a single, unified API to switch between a huge catalog of models (e.g., top-tier proprietary and various open-source models).
-    * **Cost Offloading:** This strategy allows me to send simpler, "dumb things" to **cheaper or free LLMs** while reserving premium models for complex reasoning. The generous free tier (10k requests/day) is more than enough for high-volume development testing.
-* **Qwen CLI:** When a direct API integration isn't needed, the **Qwen CLI** is used for command-line AI workflows. It's a capable alternative to the Gemini CLI and is often used with strong, free models like **GLM 4.5** via OpenRouter for complex code analysis and generation tasks.`
+When integrating LLMs:
+
+1. **Check API Documentation:**
+   ```bash
+   # OpenRouter API docs
+   curl -G --data-urlencode "q=OpenRouter API documentation" https://api.duckduckgo.com/?format=json
+   w3m -dump "https://openrouter.ai/docs"
+   ```
+
+2. **Verify Rate Limits:** Always check current rate limits in official docs
+3. **Model Selection:** Reference model comparison documentation
+4. **Error Handling:** Implement based on official error code documentation
+
+#### Cost-Efficient Model Usage
+
+* **OpenRouter API:** Primary gateway for multi-model access
+  - Document which models are used for which tasks
+  - Keep rate limit documentation handy
+  - Monitor free tier usage (10k requests/day)
+
+* **Qwen CLI:** For command-line workflows
+  - Check CLI documentation for latest flags
+  - Verify model compatibility before use
+
+## 🚀 Workflow Summary
+
+1. **Receive Task** → Read `plan/task.txt`
+2. **Check Documentation** → Find and read official docs
+3. **Plan with References** → Create plan citing documentation
+4. **Implement** → Code following documented patterns
+5. **Verify** → Test against documentation examples
+6. **Document** → Update README with doc links
+7. **Commit** → Reference docs in commit message
+8. **Push** → Only after all checks pass
+
+## 📌 Golden Rules
+
+1. **Never guess when you can check documentation**
+2. **Always use official sources over third-party tutorials**
+3. **Document every technical decision with source references**
+4. **When in doubt, search for and read the official documentation**
+5. **Keep documentation URLs in your logs for future reference**
+
+---
+
+*Remember: The best code is documented code that follows documented practices.*
